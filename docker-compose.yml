@@ -1,0 +1,44 @@
+version: '3'
+services:
+
+  epicsarchiverap-db:
+    image: mysql:8.0
+    restart: no
+    container_name: epicsarchiverap-db
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: archappl
+      MYSQL_USER: archappl
+      MYSQL_PASSWORD: archappl
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --transaction_isolation=READ-COMMITTED
+    volumes:
+      - type: volume
+        source: epicsarchiverap-mysql-data
+        target: /var/lib/mysql
+    networks:
+      - epicsarchiverap
+
+  epicsarchiverap:
+    build: .
+    restart: no
+    container_name: epicsarchiverap
+    depends_on:
+      - "epicsarchiverap-db"
+    ports:
+      - 17665:17665
+    volumes:
+      - type: volume
+        source: epicsarchiverap-storage
+        target: /storage
+    networks:
+      - epicsarchiverap
+
+volumes:
+  epicsarchiverap-mysql-data:
+    driver: local
+  epicsarchiverap-storage:
+    driver: local
+
+networks:
+  epicsarchiverap:
+    driver: bridge
