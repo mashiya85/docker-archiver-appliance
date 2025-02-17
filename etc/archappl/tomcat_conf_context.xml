@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+  <WatchedResource>WEB-INF/web.xml</WatchedResource>
+  <WatchedResource>WEB-INF/tomcat-web.xml</WatchedResource>
+  <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+  <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" initialSize="2" jmxEnabled="true" logAbandoned="true" maxActive="10" maxWait="10000" minEvictableIdleTimeMillis="30000" minIdle="2" name="jdbc/archappl" password="archappl" removeAbandoned="true" removeAbandonedTimeout="60" testOnBorrow="true" testOnReturn="false" testWhileIdle="true" timeBetweenEvictionRunsMillis="30000" type="javax.sql.DataSource" url="jdbc:mysql://epicsarchiverap-db:3306/archappl" username="archappl" validationInterval="30000" validationQuery="SELECT 1"/>
+</Context>

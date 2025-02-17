@@ -45,6 +45,14 @@ RUN ln -s /etc/archappl/log4j.properties /usr/local/tomcat/lib/log4j.properties
 RUN mv /usr/local/tomcat/conf/server.xml{,.dist} && ln -s /etc/archappl/tomcat_conf_server.xml /usr/local/tomcat/conf/server.xml
 RUN rmdir /usr/local/tomcat/logs && ln -s /storage/logs /usr/local/tomcat/logs
 
+# Using MySQL
+COPY etc/archappl/tomcat_conf_context.xml /etc/archappl/
+RUN mv /usr/local/tomcat/conf/context.xml{,.dist} && ln -s /etc/archappl/tomcat_conf_context.xml /usr/local/tomcat/conf/context.xml
+ENV MYSQL_CONNECTOR_J=mysql-connector-j-8.0.33
+RUN curl -OL https://downloads.mysql.com/archives/get/p/3/file/${MYSQL_CONNECTOR_J}.tar.gz
+RUN tar -xf ${MYSQL_CONNECTOR_J}.tar.gz && rm ${MYSQL_CONNECTOR_J}.tar.gz
+RUN cp ${MYSQL_CONNECTOR_J}/*.jar /usr/local/tomcat/lib/
+
 # Be generous with the heap
 ENV JAVA_OPTS="-XX:+UseG1GC -Xms4G -Xmx4G -ea"
 # Tell the appliance that we are deploying all the components in one VM;
@@ -54,7 +62,7 @@ ENV ARCHAPPL_APPLIANCES=/etc/archappl/appliances.xml
 ENV ARCHAPPL_MYIDENTITY=appliance0
 ENV ARCHAPPL_POLICIES=/etc/archappl/policies.py
 ENV ARCHAPPL_PROPERTIES_FILENAME=/etc/archappl/archappl.properties
-ENV ARCHAPPL_PERSISTENCE_LAYER=org.epics.archiverappliance.config.persistence.InMemoryPersistence
+ENV ARCHAPPL_PERSISTENCE_LAYER=org.epics.archiverappliance.config.persistence.MySQLPersistence
 ENV ARCHAPPL_SHORT_TERM_FOLDER=/storage/sts
 ENV ARCHAPPL_MEDIUM_TERM_FOLDER=/storage/mts
 ENV ARCHAPPL_LONG_TERM_FOLDER=/storage/lts
