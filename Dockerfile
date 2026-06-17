@@ -3,8 +3,8 @@ FROM alpine AS download-extract
 RUN apk update && apk add tar unzip curl
 
 WORKDIR /aa
-ENV RELEASE=v0.0.1_SNAPSHOT_13-Nov-2019
-ENV RELEASE_FILE=archappl_v0.0.1_SNAPSHOT_13-November-2019T15-45-42.tar.gz
+ENV RELEASE=2.3.1
+ENV RELEASE_FILE=archappl_v2.3.1.tar.gz
 RUN curl -OL https://github.com/archiver-appliance/epicsarchiverap/releases/download/${RELEASE}/${RELEASE_FILE}
 RUN tar -xf ${RELEASE_FILE} && rm ${RELEASE_FILE}
 RUN ls
@@ -15,11 +15,11 @@ RUN for app in engine mgmt etl retrieval; do \
 RUN ls *
 
 
-FROM tomcat:9.0.36-jdk14-openjdk-slim-buster
+FROM tomcat:10-jdk21
 
 SHELL ["/bin/bash", "-c"]
 
-COPY --from=download-extract /aa/NOTICE /aa/LICENSE /aa/Apache_2.0_License.txt /aa/RELEASE_NOTES /
+#COPY --from=download-extract /aa/NOTICE /aa/LICENSE /aa/Apache_2.0_License.txt /aa/RELEASE_NOTES /
 
 COPY --from=download-extract /aa/*.war /usr/local/tomcat/webapps/
 # ^ above: put the compressed web application resource (WAR) files into the webapps folder.
